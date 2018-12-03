@@ -166,41 +166,53 @@ angular.module('bahmni.registration')
                 var nameMatched = false;
 
                 if (givenName && givenName.length >= 1) {
-                    patientService.searchByNameOrIdentifier(givenName, 5).then(function (response) {
-
-                        if (response.data) {
+                    return patientService.searchByNameOrIdentifier(givenName, 5).then(function (response) {
+                        if (response.data.pageOfResults.length != 0) {
                             console.log(response.data);
-                            messagingService.showMessage("error", "Name exists!");
-                            errorMessage = undefined; 
-                            return $q.when({});
+                            return nameMatched = true;
                         }
-
                     });
                 }
 
-                return nameMatched;
+                return $q(function (resolve) { return resolve(false); });
 
             }
 
             $scope.create = function () {
                 
-                validatePatientName()
-                addNewRelationships();
 
-                var errorMessages = Bahmni.Common.Util.ValidationUtil.validate($scope.patient, $scope.patientConfiguration.attributeTypes);
-                if (errorMessages.length > 0) {
-                    errorMessages.forEach(function (errorMessage) {
-                        messagingService.showMessage('error', errorMessage);
-                    });
-                    return $q.when({});
-                }
-                return spinner.forPromise(createPromise()).then(function (response) {
-                    if (errorMessage) {
-                        messagingService.showMessage("error", errorMessage);
-                        errorMessage = undefined;
+                var nameMatched = validatePatientName().then((invalid) => {
+
+
+
+                    if (invalid) {
+                        console.log(invalid);
+    
+                        messagingService.showMessage('error', "Name Exists!");
+                    } else {
+                        addNewRelationships();
+    
+                        var errorMessages = Bahmni.Common.Util.ValidationUtil.validate($scope.patient, $scope.patientConfiguration.attributeTypes);
+                        if (errorMessages.length > 0) {
+                            errorMessages.forEach(function (errorMessage) {
+                                messagingService.showMessage('error', errorMessage);
+                            });
+                        }
+                        
+                        return spinner.forPromise(createPromise()).then(function (response) {
+                            if (errorMessage) {
+                                messagingService.showMessage("error", errorMessage);
+                                errorMessage = undefined;
+                            }
+                        });
                     }
-                });
 
+
+                }); 
+
+                
+
+            return nameMatched;
 
             }
 
