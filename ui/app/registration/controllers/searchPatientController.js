@@ -283,6 +283,29 @@ angular.module('bahmni.registration')
                     });
                 spinner.forPromise(searchPromise);
             };
+
+            $scope.searchByNameOrIdentifier = function (){
+                if (!isUserPrivilegedForSearch()) {
+                    showInsufficientPrivMessage();
+                    return;
+                }
+                if (!$scope.searchParameters.registrationNameOrNumber) {
+                    return;
+                }
+                var query = $scope.searchParameters.registrationNameOrNumber;
+                
+                var searchPromise =  patientService.searchByNameOrIdentifier(query, 50).then(function (response) {
+                    if (response.data.pageOfResults.length != 0) {
+                        mapExtraIdentifiers(response.data);
+                        mapCustomAttributesSearchResults(response.data);
+                        mapAddressAttributesSearchResults(response.data);
+                        mapProgramAttributesSearchResults(response.data);
+                        $scope.results = response.data.pageOfResults;
+                    }
+                });
+                spinner.forPromise(searchPromise);
+            }
+
             var isUserPrivilegedForSearch = function () {
                 var applicablePrivs = [Bahmni.Common.Constants.viewPatientsPrivilege, Bahmni.Common.Constants.editPatientsPrivilege,
                     Bahmni.Common.Constants.addVisitsPrivilege, Bahmni.Common.Constants.deleteVisitsPrivilege];

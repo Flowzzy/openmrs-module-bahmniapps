@@ -1,26 +1,22 @@
 <section class="reg-search-wrapper">
     <section class="reg-search">
         <article class="search-seperator-l" ng-if="::patientIdentifierSearchConfig.show">
-            <form name="searchByIdForm" ng-submit="searchById()" class="simple-form-ui clearfix" >
-                    <label for="registrationNumber"><strong>{{ ::'REGISTRATION_LABEL_PATIENT_ID' | translate}}</strong></label>
+            <form name="searchByIdForm" ng-submit="searchByNameOrIdentifier()" class="simple-form-ui clearfix" >
+                    <label for="registrationNumber"><strong>{{ ::'REGISTRATION_LABEL_NAME_OR_PATIENT_ID' | translate}}</strong></label>
                     <div class="search-patient-id fl">
                         <input tabindex="2" class="fl" type="text" id="registrationNumber"
-                        ng-model="searchParameters.registrationNumber" focus-me="true"
+                        ng-model="searchParameters.registrationNameOrNumber" focus-me="true"
                                placeholder="{{ ::'REGISTRATION_LABEL_ENTER_ID' | translate}}">
                         <div class="reg-srch-btn fl">
-                            <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNumber" >{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
+                            <button tabindex="3" type="submit" ng-disabled="!searchParameters.registrationNameOrNumber" >{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
                         </div>
                     </div>
 
             </form>
         </article>
+
         <article class="search-seperator-r">
             <form name="searchByNameForm" ng-submit="searchPatients()" class="simple-form-ui" >
-
-                <article class="fl">
-                    <label for="name"><strong>{{ ::'REGISTRATION_LABEL_NAME' | translate}}</strong></label>
-                    <input tabindex="4" type="text" id="name" ng-model="searchParameters.name" placeholder="{{ ::'REGISTRATION_LABEL_ENTER_NAME' | translate}}">
-                </article>
                 <article class="fl" ng-if="::customAttributesSearchConfig.show">
                     <label for="name"><strong>{{::customAttributesSearchConfig.label}}</strong></label>
                     <input tabindex="5" type="text" id="customAttribute" ng-model="searchParameters.customAttribute" placeholder="{{::customAttributesSearchConfig.placeholder}}">
@@ -35,11 +31,11 @@
                     <input tabindex="7" type="text" id="programAttribute" ng-model="searchParameters.programAttributeFieldValue" placeholder="{{ ::programAttributesSearchConfig.placeholder}}">
                 </article>
 
-                <article class="fl">
+                <!-- <article class="fl">
                     <div class="reg-srch-btn">
                         <button tabindex="8" type="submit" ng-disabled="disableSearchButton()">{{ ::'REGISTRATION_LABEL_SEARCH' | translate}}</button>
                     </div>
-                </article>
+                </article> -->
             </form>
 
         </article>
